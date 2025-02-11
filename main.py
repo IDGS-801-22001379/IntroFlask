@@ -6,7 +6,20 @@ app = Flask(__name__)
 # Ruta principal que renderiza la plantilla HTML
 @app.route("/")
 def index():
-    return render_template("index.html")
+    titulo = "IDGS801"
+    lista = ["pedro", "Juan", "Yael"]
+    return render_template("index.html", titulo=titulo, lista=lista)
+
+@app.route("/ejemplo1")
+def ejemplo1():
+    return render_template("ejemplo1.html")
+
+
+@app.route("/ejemplo2")
+def ejemplo2():
+    return render_template("ejemplo2.html")
+
+
 
 # Ruta simple que muestra un mensaje en HTML
 @app.route("/hola")
