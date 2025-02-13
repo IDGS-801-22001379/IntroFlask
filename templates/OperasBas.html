@@ -1,0 +1,53 @@
+{% extends "layout.html" %}
+{% block container %}
+
+<div class="container mt-4">
+    <h2 class="text-center">Calculadora Básica</h2>
+
+    <form action="/OperasBas" method="post" class="mt-3">
+        <div class="mb-3">
+            <label for="n1" class="form-label">Número 1:</label>
+            <input type="number" id="n1" name="n1" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="n2" class="form-label">Número 2:</label>
+            <input type="number" id="n2" name="n2" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Operación:</label>
+            <div class="form-check">
+                <input type="radio" id="suma" name="operacion" value="suma" class="form-check-input" required>
+                <label for="suma" class="form-check-label">Suma</label>
+            </div>
+            <div class="form-check">
+                <input type="radio" id="resta" name="operacion" value="resta" class="form-check-input">
+                <label for="resta" class="form-check-label">Resta</label>
+            </div>
+            <div class="form-check">
+                <input type="radio" id="multiplicacion" name="operacion" value="multiplicacion" class="form-check-input">
+                <label for="multiplicacion" class="form-check-label">Multiplicación</label>
+            </div>
+            <div class="form-check">
+                <input type="radio" id="division" name="operacion" value="division" class="form-check-input">
+                <label for="division" class="form-check-label">División</label>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100">Calcular</button>
+    </form>
+
+    {% if mensaje %}
+        <div class="alert alert-danger mt-3">{{ mensaje }}</div>
+    {% endif %}
+
+    {% if resultado is not none %}
+        <div class="mt-3">
+            <label class="form-label">Resultado:</label>
+            <input type="text" class="form-control" value="{{ resultado }}" readonly>
+        </div>
+    {% endif %}
+</div>
+
+{% endblock %}
