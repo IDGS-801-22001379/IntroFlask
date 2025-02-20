@@ -1,6 +1,8 @@
 from flask import Flask, render_template, request, flash, jsonify
 from flask import Flask, render_template, request
 from datetime import datetime
+from forms import UserForm
+
 
 # Crear la aplicación Flask
 app = Flask(__name__)
@@ -234,6 +236,44 @@ def zodiaco():
             }
     
     return render_template("zodiaco.html", resultado=resultado)
+
+
+
+
+
+
+
+#-------------------------------
+
+
+
+
+
+app = Flask(__name__)
+app.config['SECRET_KEY'] = 'clave_secreta'
+
+@app.route("/Alumnos", methods=["GET", "POST"])
+def alumnos():
+    mat = ''
+    nom = ''
+    ape = ''
+    email = ''
+
+    alumno_clas = UserForm(request.form)
+
+    if request.method == 'POST' and alumno_clas.validate():
+        mat = alumno_clas.matricula.data
+        nom = alumno_clas.nombre.data
+        ape = alumno_clas.apellido.data
+        email = alumno_clas.correo.data
+
+    return render_template("Alumnos.html", form=alumno_clas, mat=mat, nom=nom, ape=ape, email=email)
+
+
+
+
+
+
 
 
 
