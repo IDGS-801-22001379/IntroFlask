@@ -1,18 +1,43 @@
-from flask import Flask, render_template, request, flash, jsonify
+from flask import Flask, render_template, request, flash
 from flask import Flask, render_template, request
 from datetime import datetime
+from flask_wtf.csrf import CSRFProtect
+
 from forms import UserForm
+from flask import flash
+from flask import g
 
 
 # Crear la aplicación Flask
 app = Flask(__name__)
-app.secret_key = "clave_secreta"
+csrf = CSRFProtect()
+app.secret_key = "ESTA ES UNA CLAVE SECRETA"
+
+
+
+# Mndar un 404 con un archivo
+@app.errorhandler(404)
+def page_notfoud(e):
+    return render_template('404.html'), 404
+
+@app.before_request
+def before_request():
+    g.user = "Mario"
+    print("beforer1")
+
+@app.after_request
+def after_request(response):
+    print("afterr1")
+    return response
+
 
 # Ruta principal que renderiza la plantilla HTML
 @app.route("/")
 def index():
     titulo = "IDGS801"
     lista = ["pedro", "Juan", "Yael"]
+    nom = g.user
+    print("Index 2 {}".format(g.user))
     return render_template("index.html", titulo=titulo, lista=lista)
 
 @app.route("/ejemplo1")
@@ -245,13 +270,6 @@ def zodiaco():
 
 #-------------------------------
 
-
-
-
-
-app = Flask(__name__)
-app.config['SECRET_KEY'] = 'clave_secreta'
-
 @app.route("/Alumnos", methods=["GET", "POST"])
 def alumnos():
     mat = ''
@@ -267,9 +285,17 @@ def alumnos():
         ape = alumno_clas.apellido.data
         email = alumno_clas.correo.data
 
+        mensaje = 'Bienvenido {}'.format(nom)
+        flash(mensaje)
+
+       
+
     return render_template("Alumnos.html", form=alumno_clas, mat=mat, nom=nom, ape=ape, email=email)
 
 
+@app.route("/usuarios")
+def usuarios():
+    return render_template("usuarios.html")
 
 
 
@@ -279,6 +305,7 @@ def alumnos():
 
 
 if __name__ == "__main__":
+    csrf.init_app(app)
     app.run(debug=True, port=3000)
 
 

@@ -1,6 +1,9 @@
 {% macro camposNuevos(field) %}
     <label for="{{ field.id }}">{{ field.label }}</label>
     <p>{{ field(class="form-control") }}</p>
+
+
+    
     {% if field.errors %}
         <ul class="alert alert-danger">
             {% for error in field.errors %}
@@ -8,4 +11,6 @@
             {% endfor %}
         </ul>
     {% endif %}
+
+
 {% endmacro %}
