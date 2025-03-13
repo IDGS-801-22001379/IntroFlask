@@ -2,8 +2,9 @@ from flask import Flask, render_template, request, flash
 from flask import Flask, render_template, request
 from datetime import datetime
 from flask_wtf.csrf import CSRFProtect
-
+from forms import ZodiacoForm
 from forms import UserForm
+from forms import CinepolisForm
 from flask import flash
 from flask import g
 
@@ -128,17 +129,21 @@ def operas1():
 '''-------------------------------------------------cinepolis-------------------------------------------------------------------------------'''
 
 
+
+
+
 @app.route("/cinepolis", methods=["GET", "POST"])
 def cinepolis():
+    form = CinepolisForm(request.form)
     total_pagar = None
     resumen_compra = None
 
-    if request.method == "POST":
+    if request.method == "POST" and form.validate():
         try:
-            nombre = request.form["nombre"]
-            cantidad_compradores = int(request.form["cantidad_compradores"])
-            cantidad_boletos = int(request.form["cantidad_boletos"])
-            usa_cineco = request.form["tarjeta"] == "si"
+            nombre = form.nombre.data
+            cantidad_compradores = form.cantidad_compradores.data
+            cantidad_boletos = form.cantidad_boletos.data
+            usa_cineco = form.tarjeta.data == "si"
 
             precio_boleta = 12
             total = precio_boleta * cantidad_boletos
@@ -171,14 +176,15 @@ def cinepolis():
         except ValueError:
             flash("Por favor, ingresa valores numéricos válidos.", "danger")
 
-    return render_template("cinepolis.html", total_pagar=total_pagar, resumen_compra=resumen_compra)
+    return render_template("cinepolis.html", form=form, total_pagar=total_pagar, resumen_compra=resumen_compra)
+
+
+
 
 
 
 
 #  ------------------------------------------------------------------------------------------------------------------
-
-
 
 # Mapeo correcto de signos según el ciclo de 12 años
 zodiac_years = {
@@ -234,34 +240,34 @@ def obtener_signo_chino(anio):
 
 @app.route("/zodiaco", methods=["GET", "POST"])
 def zodiaco():
+    form = ZodiacoForm(request.form)
     resultado = None
-    
-    if request.method == "POST":
-        nombre = request.form.get("nombre", "").strip()
-        apellido_paterno = request.form.get("apellido_paterno", "").strip()
-        apellido_materno = request.form.get("apellido_materno", "").strip()
-        dia = request.form.get("dia")
-        mes = request.form.get("mes")
-        anio = request.form.get("anio")
-        sexo = request.form.get("sexo")
 
-        if not (nombre and apellido_paterno and apellido_materno and dia and mes and anio and sexo):
-            resultado = "Todos los campos son obligatorios."
-        else:
-            edad = calcular_edad(dia, mes, anio)
-            signo, imagen_nombre = obtener_signo_chino(anio)
-            imagen = f"/static/img/{imagen_nombre}" if imagen_nombre else ""
+    if request.method == "POST" and form.validate():
+        nombre = form.nombre.data.strip()
+        apellido_paterno = form.apellido_paterno.data.strip()
+        apellido_materno = form.apellido_materno.data.strip()
+        dia = form.dia.data
+        mes = form.mes.data
+        anio = form.anio.data
+        sexo = form.sexo.data
 
-            resultado = {
-                "nombre": f"{nombre} {apellido_paterno} {apellido_materno}",
-                "edad": edad,
-                "signo": signo,
-                "sexo": "Masculino" if sexo == "M" else "Femenino",
-                "imagen": imagen
-            }
-    
-    return render_template("zodiaco.html", resultado=resultado)
+        edad = calcular_edad(dia, mes, anio)
+        signo, imagen_nombre = obtener_signo_chino(anio)
+        imagen = f"/static/img/{imagen_nombre}" if imagen_nombre else ""
 
+        resultado = {
+            "nombre": f"{nombre} {apellido_paterno} {apellido_materno}",
+            "edad": edad,
+            "signo": signo,
+            "sexo": "Masculino" if sexo == "M" else "Femenino",
+            "imagen": imagen
+        }
+
+        # Enviar mensaje de confirmación con el nombre
+        flash(f"Gracias por usar la aplicacion, {nombre}!")
+
+    return render_template("zodiaco.html", form=form, resultado=resultado)
 
 
 
@@ -296,8 +302,6 @@ def alumnos():
 @app.route("/usuarios")
 def usuarios():
     return render_template("usuarios.html")
-
-
 
 
 

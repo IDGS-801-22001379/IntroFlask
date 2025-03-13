@@ -2,8 +2,6 @@
     <label for="{{ field.id }}">{{ field.label }}</label>
     <p>{{ field(class="form-control") }}</p>
 
-
-    
     {% if field.errors %}
         <ul class="alert alert-danger">
             {% for error in field.errors %}
@@ -11,6 +9,34 @@
             {% endfor %}
         </ul>
     {% endif %}
-
-
 {% endmacro %}
+
+{% macro camposZodiaco(field) %}
+    <label for="{{ field.id }}">{{ field.label }}</label>
+    <p>{{ field(class="form-control") }}</p>
+
+    {% if field.errors %}
+        <ul class="alert alert-danger">
+            {% for error in field.errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endmacro %}
+
+
+
+{% macro camposCinepolis(field) %}
+    <label for="{{ field.id }}">{{ field.label }}</label>
+    <p>{{ field(class="form-control") }}</p>
+
+    {% if field.errors %}
+        <ul class="alert alert-danger">
+            {% for error in field.errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endmacro %}
+
+

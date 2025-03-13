@@ -1,55 +1,69 @@
 {% extends "layout2.html" %}
+{% import "_macros.html" as macro %}
 
 {% block content %}
 <div class="container mt-5">
     <h2 class="text-center text-primary">Zodiaco Chino</h2>
+
+
     <div class="row">
         <!-- Tarjeta de Datos Personales -->
         <div class="col-md-6">
             <div class="card border-primary">
                 <div class="card-header bg-primary text-white">Datos Personales</div>
                 <div class="card-body">
-                    <form method="POST">
-                        <div class="mb-3">
-                            <label class="form-label">Nombre:</label>
-                            <input type="text" name="nombre" class="form-control" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Apellido Paterno:</label>
-                            <input type="text" name="apellido_paterno" class="form-control" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Apellido Materno:</label>
-                            <input type="text" name="apellido_materno" class="form-control" required>
-                        </div>
+                    <form method="POST" onsubmit="mostrarAlerta()">
+                        {{ form.csrf_token }}
+
+                        {{ macro.camposZodiaco(form.nombre) }}
+                        {{ macro.camposZodiaco(form.apellido_paterno) }}
+                        {{ macro.camposZodiaco(form.apellido_materno) }}
+
+                        <!-- Fecha de nacimiento alineada en una sola fila -->
                         <div class="mb-3">
                             <label class="form-label">Fecha de Nacimiento:</label>
-                            <div class="d-flex gap-2">
-                                <input type="number" name="dia" class="form-control" placeholder="Día" required min="1" max="31">
-                                <input type="number" name="mes" class="form-control" placeholder="Mes" required min="1" max="12">
-                                <input type="number" name="anio" class="form-control" placeholder="Año" required>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    {{ form.dia(class="form-control", placeholder="Día") }}
+                                </div>
+                                <div class="col-md-4">
+                                    {{ form.mes(class="form-control", placeholder="Mes") }}
+                                </div>
+                                <div class="col-md-4">
+                                    {{ form.anio(class="form-control", placeholder="Año") }}
+                                </div>
                             </div>
                         </div>
+
+                        <!-- Campo Sexo bien alineado -->
                         <div class="mb-3">
                             <label class="form-label">Sexo:</label>
-                            <div class="form-check">
-                                <input type="radio" name="sexo" value="M" class="form-check-input" required>
-                                <label class="form-check-label">Masculino</label>
-                            </div>
-                            <div class="form-check">
-                                <input type="radio" name="sexo" value="F" class="form-check-input" required>
-                                <label class="form-check-label">Femenino</label>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-check">
+                                        <input type="radio" name="sexo" value="M" class="form-check-input" required>
+                                        <label class="form-check-label">Masculino</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-check">
+                                        <input type="radio" name="sexo" value="F" class="form-check-input" required>
+                                        <label class="form-check-label">Femenino</label>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-success w-100">Imprimir</button>
+
+                        <button type="submit" class="btn btn-success w-100">Procesar</button>
                     </form>
                 </div>
             </div>
         </div>
+
         <!-- Tarjeta de Resultado -->
         <div class="col-md-6">
             {% if resultado %}
-            <div class="card border-success">
+            <div class="card border-success mt-3">
                 <div class="card-header bg-success text-white">Resultado</div>
                 <div class="card-body text-center">
                     <h4>Hola {{ resultado.nombre }}</h4>
@@ -62,4 +76,7 @@
         </div>
     </div>
 </div>
+
+
+
 {% endblock %}
